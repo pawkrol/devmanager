@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<style>
+    html, body {
+        color: #444;
+        background-color: #F7F7F7;
+    }
+    .toolbar{
+        background: #F9F9F9;
+        color: #777;
+        padding: 10px;
+        border-bottom: 1px solid #00d873;
+        margin-bottom: 20px;
+    }
+    .toolbar-element{
+        vertical-align: middle;
+    }
+    .toolbar-title{
+        font-family: Helvetica, serif;
+        font-size: 21px;
+    }
+    .toolbar-icon{
+        cursor: pointer;
+    }
+    .toolbar-icon > a{
+        color: #777;
+        text-decoration: none;
+    }
+    .toolbar-icon > a:hover{
+        color: #4CAF50;
+    }
+</style>
+<body>
+
+    <div class="container-fluid">
+        <div class="row toolbar">
+            <i class="material-icons toolbar-element toolbar-icon">
+                <a href="{{ path('dashboard') }}?projectId={{ project.id }}">
+                    chevron_left
+                </a>
+            </i>
+            <span class="toolbar-element toolbar-title">{{ project.name }}</span>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+                {% form_theme form 'form/bootstrap_3_custom.html.twig' %}
+                {{ form_start(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.description) }}
+                {{ form_label(form.userId, "User") }}
+                {{ form_errors(form.userId) }}
+                {{ form_widget(form.userId) }}
+                <button type="submit" class="btn btn-success btn-block" style="margin-top: 20px"><b>Add</b></button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

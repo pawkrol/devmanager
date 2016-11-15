@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet"
+          href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+    <style>
+        body{
+            color: #333;
+            background-color: #F7F7F7;
+        }
+        .center-block {
+            width: 50%;
+            height: 50%;
+            min-width: 200px;
+            max-width: 400px;
+            padding: 20px;
+        }
+        .knockout {
+            background: url(http://apod.nasa.gov/apod/image/1610/Sh2-129+OU4+vdB140_Rolf-Geissinger.jpg) -180px -750px;
+            color: red;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            font-weight: bold;
+            font-size: 40px;
+            font-family: "Arial", helvetica, serif;
+            margin: 20px auto;
+        }
+        .login{
+            background-color: #FFF;
+            padding: 20px 20px 10px 20px;
+            border: 1px solid #CCC;
+        }
+    </style>
+</head>
+<body>
+<div class="center-block">
+    <div class="text-center block">
+        <h1 class="knockout">
+            <b>DEV MANAGER</b>
+        </h1>
+    </div>
+
+    <div class="img-rounded login">
+        {% form_theme form 'bootstrap_3_layout.html.twig' %}
+        {{ form_start(form) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.plainPassword.first) }}
+        {{ form_row(form.plainPassword.second) }}
+
+        <button type="submit" class="btn btn-success btn-block" ><b>Register</b></button>
+        {{ form_end(form) }}
+    </div>
+</div>
+</body>
+</html>

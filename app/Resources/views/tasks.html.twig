@@ -1,0 +1,38 @@
+<div id="todos" class="col-md-4">
+        <ul class="task-list droptrue">
+    {% for todo in todos %}
+        <li id="{{ todo.id }}" class="row task-field ui-widget-content"
+                             data-toggle="collapse" href="#collapseExample{{ todo.id }}"
+                                aria-expanded="false" aria-controls="collapseExample{{ todo.id }}">
+            <div class="col-md-5 text-left task-field-name">{{ todo.name }}</div>
+            <div class="col-md-6 text-right task-field-username">{{ todo.userId.username }}</div>
+            <div class="col-md-1 text-right task-field-cross" onclick="onTaskDelete({{ todo.id }})">&times;</div>
+        </li>
+            <div class="collapse task-field-description" id="collapseExample{{ todo.id }}">
+                {{ todo.description }}
+            </div>
+    {% endfor %}
+        </ul>
+</div>
+<div id="inprogresses" class="col-md-4">
+        <ul class="task-list droptrue">
+    {% for inprogress in inprogresses %}
+        <li id="{{ inprogress.id }}" class="row task-field">
+            <div class="col-md-5 text-left task-field-name">{{ inprogress.name }}</div>
+            <div class="col-md-6 text-right task-field-username">{{ inprogress.userId.username }}</div>
+            <div class="col-md-1 text-right task-field-cross" onclick="onTaskDelete({{ inprogress.id }})">&times;</div>
+        </li>
+    {% endfor %}
+        </ul>
+</div>
+<div id="dones" class="col-md-4">
+        <ul class="task-list droptrue">
+    {% for done in dones %}
+        <li id="{{ done.id }}" class="row task-field">
+            <div class="col-md-5 text-left task-field-name">{{ done.name }}</div>
+            <div class="col-md-6 text-right task-field-username">{{ done.userId.username }}</div>
+            <div class="col-md-1 text-right task-field-cross" onclick="onTaskDelete({{ done.id }})">&times;</div>
+        </li>
+    {% endfor %}
+        </ul>
+</div>

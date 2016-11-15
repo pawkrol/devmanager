@@ -1,0 +1,33 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+logout:
+    path: /logout
+
+homepage:
+    path: /
+
+dashboard:
+    path: /dashboard
+
+task:
+    path: /dashboard/task
+
+ajax-role:
+    path: /ajax/role
+
+ajax-tasks:
+    path: /ajax/tasks
+
+ajax-set-tasks:
+    path: /ajax/tasks/set
+
+ajax-delete-tasks:
+    path: /ajax/tasks/delete
+
+share:
+    path: /share
+
+share-get-token:
+    path: /share/get_token

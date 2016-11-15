@@ -1,0 +1,196 @@
+html, body {
+    color: #444;
+    background-color: #F7F7F7;
+    height: 100%;
+}
+.navbar{
+    height: 100%;
+    background-color: #F2F2F2;
+    border-right: 1px solid #DDD;
+    margin: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.user-info{
+    min-height: 10%;
+    background: #EDEDED;
+    border-bottom: 1px solid #DDD;
+    padding: 10px 0 10px 0;
+}
+.user-info-email{
+    font-size: 20px;
+    font-family: helvetica, serif;
+}
+.user-info-role{
+    font-size: 15px;
+    font-family: helvetica, serif;
+    color: #AAA;
+}
+.user-info-img{
+    width: 64px;
+    height: 64px;
+    margin-bottom: 10px;
+    border: 1px solid #DDD;
+}
+.add-button{
+    margin: 10px 0 10px 0;
+}
+.project-row{
+    padding: 10px;
+    border-top: 1px solid #DDD;
+}
+.project-row:hover{
+    background: #DDD;
+}
+.project-row-selected{
+    padding: 10px;
+    border-top: 1px solid #DDD;
+    background: #F9F9F9;
+}
+.project-row-selected:hover{
+    background: #DDD;
+}
+.project-row-title{
+    font-size: 18px;
+    color: #028248;
+}
+.project-row-desc{
+    font-size: 14px;
+    color: #555;
+}
+.project-row-dates{
+    font-size: 11px;
+    color: #777;
+}
+
+.dashbar{
+    height: 100%;
+    margin: 0;
+}
+.dashbar-info{
+    min-height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dashbar h2{
+    color: #BBB;
+}
+.dashbar-project h4{
+    color: #777;
+}
+.dashbar-project{
+    background: #EDEDED;
+    padding: 0 10px 10px 10px;
+    margin: 10px;
+    border-radius: 8px;
+}
+.dashbar-project-title{
+    /*color: #EEE;*/
+    background: #F9F9F9;
+    color: #777;
+    padding: 10px;
+    font-family: Helvetica, serif;
+    font-size: 21px;
+    border-bottom: 1px solid #00d873;
+    margin-bottom: 20px;
+}
+
+.progressbar{
+    padding: 0 20px 0 20px;
+}
+.meter{
+    height: 30px;
+    position: relative;
+    background: #F1F1F1;
+    border: 1px solid #DDD;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    padding: 2px;
+}
+.meter > span {
+    display: block;
+    height: 100%;
+    border-radius: 5px;
+    background-color: #CCC;
+    position: relative;
+    overflow: hidden;
+}
+.red > span {
+    background: #F44336;
+}
+.orange > span {
+    background: #FF9800;
+}
+.yellow > span {
+    background: #FFEB3B;
+}
+.green > span {
+    background: #4CAF50;
+}
+.old > span {
+    background: #CCC;
+}
+.progress-date{
+    color: #777;
+}
+.inprogress-column{
+    border-right: 1px solid #DDD;
+    border-left: 1px solid #DDD;
+}
+.dashbar-toolbar-icon{
+    float: right;
+    margin: 5px;
+    cursor: pointer;
+}
+.dashbar-toolbar-icon:hover{
+    color: #4CAF50;
+}
+.dashbar-toolbar-icon > a{
+    color: #777;
+    text-decoration: none;
+}
+.dashbar-toolbar-icon > a:hover{
+    color: #4CAF50;
+}
+.task-field{
+    background: #3ab75e;
+    font-weight: bold;
+    color: #F7F7F7;
+    padding: 2px 4px 2px 2px;
+    margin: 5px 5px 0 5px;
+    border-radius: 4px;
+    border: 1px solid #DDD;
+}
+.task-field-name{
+    padding-left: 5px;
+    margin: 0;
+}
+.task-field-username{
+    font-weight: normal;
+    padding-right: 3px;
+    margin: 0;
+}
+.task-field-cross{
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+.task-field-description{
+    margin: 0 5px 5px 5px;
+    border-radius: 4px;
+    border: 1px solid #DDD;
+}
+.modal-textarea{
+    resize: vertical;
+}
+.task-list{
+    list-style-type: none;
+    min-width: 100%;
+    min-height: 10px;
+    float: left;
+    padding: 5px;
+}
+

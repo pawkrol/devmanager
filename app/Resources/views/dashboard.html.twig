@@ -1,0 +1,309 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/dashboard_style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 navbar">
+                <div class="row user-info text-center">
+                    <a href="#" data-toggle="popover" data-trigger="focus"
+                       data-content="<a href='{{ logout_path }}'>Logout</a>">
+                        <img src="{{ asset('user.png') }}" class="img-circle user-info-img">
+                    </a>
+                    <div class="user-info-email">
+                        {{ user.username }}
+                    </div>
+                    <div id="user_role" class="user-info-role">
+                        select project
+                    </div>
+                </div>
+                <button type="button" class="btn btn-success btn-block add-button" data-toggle="modal"
+                        data-target="#addModal">
+                    <b>Add project</b>
+                </button>
+                <div>
+                    {% for project in projects %}
+                        <div class="row">
+                            <div class="project-row" id="project_{{ project.id }}"
+                             onclick="onProjectSelect({{ project|json_encode }})">
+                                <div class="project-row-title">{{ project.name }}</div>
+                                <div class="project-row-dates">
+                                    {{ project.dateStart|date('d/m/Y') }} - {{ project.dateEnd|date('d/m/Y') }}
+                                </div>
+                                <div class="project-row-desc">{{ project.description }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-10 dashbar text-center">
+                <div id="project_content">
+                    <div class="row dashbar-project-title">
+                        <span id="project_name" style="float: left"></span>
+                        <i class="material-icons dashbar-toolbar-icon" data-toggle="modal"
+                           data-target="#taskModal">
+                            <a id="taskLink">
+                                    add_circle_outline
+                            </a>
+                        </i>
+                        <i id="share" class="material-icons dashbar-toolbar-icon hide" data-toggle="modal"
+                           data-target="#shareModal">
+                            person_add
+                        </i>
+                    </div>
+                    <div class="row progressbar">
+                        <div id="progress_bar" class="meter green">
+                            <span id="progress"></span>
+                        </div>
+                        <span>
+                            <div id="progress_start_date" class="progress-date" style="float: left"></div>
+                            <div id="progress_end_date" class="progress-date" style="float: right"></div>
+                        </span>
+                    </div>
+                    <div class="row dashbar-project">
+                        <div class="row">
+                            <div id="tasks_todo" class="col-md-4">
+                                <span><h4>TODO</h4></span>
+                            </div>
+                            <div class="col-md-4 inprogress-column">
+                                <span><h4>IN PROGRESS</h4></span>
+                            </div>
+                            <div id="tasks_done" class="col-md-4">
+                                <span><h4>DONE</h4></span>
+                            </div>
+                        </div>
+                        <div id="tasks" class="row">
+                        </div>
+                    </div>
+                </div>
+                <div id="no_project" class="dashbar-info">
+                    <h2>no project selected</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                {% form_theme form 'form/bootstrap_3_custom.html.twig' %}
+                {{ form_start(form) }}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addModalLabel">Create new project</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.date_start) }}
+                        {{ form_errors(form.date_start) }}
+                        {{ form_widget(form.date_start) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.date_end) }}
+                        {{ form_errors(form.date_end) }}
+                        {{ form_widget(form.date_end) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    {{ form_widget(form.save) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addModalLabel">Share project</h4>
+                </div>
+                <div class="modal-body">
+                    <div id ="share-error" class="text-center alert alert-danger hide">
+                    </div>
+                    <div class="form-group">
+                        <label for="role">User role</label>
+                        <input type="text" class="form-control" id="role" placeholder="ex. Project developer">
+                    </div>
+                    <button class="btn btn-success btn-block" onclick="executeAjaxGetToken()">
+                        Generate share link
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <input type="text" class="form-control" id="token" disabled="disabled" placeholder="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var selectedId = -1;
+
+        $(document).ready(function(){
+            document.getElementById("project_content").style.display = "none";
+            $('[data-toggle="popover"]').popover({html:true, container:'body'});
+            $('#share-popover').popover({
+                html:true,
+                container:'body',
+                title: 'Share link',
+                content: 'Press button to generate'
+            });
+
+            {% if projectId != -1 %}
+                {% for project in projects %}
+                    {% if project.id == projectId %}
+                        onProjectSelect({{ project|json_encode|raw }});
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+
+        function onProjectSelect(project) {
+            var p = project.id;
+            if (selectedId != p && selectedId != -1){
+                document.getElementById("project_".concat(selectedId.toString())).className = "project-row";
+            }
+
+            if (selectedId == p){
+                return;
+            }
+
+            selectedId = p;
+            document.getElementById("project_".concat(p)).className = "project-row-selected";
+            document.getElementById("no_project").style.display = "none";
+            document.getElementById("project_content").style.display = "";
+
+            $('#tasks').html();
+
+            setUpValues(project);
+            setInterval(updateProgressBar(project), 1000 * 60 * 60);
+
+            executeAjaxGetRole(p);
+            executeAjaxGetTasks(p);
+        }
+
+        function onTaskDelete(id){
+            var r = confirm("Are you sure you want to delete a task?");
+            if (r == true) {
+                $('#' + id).hide();
+
+                $.get('{{ path('ajax-delete-tasks') }}', {taskId: id})
+                        .done(function () {
+                            $('#' + id).remove();
+                        });
+            }
+        }
+
+        function setUpValues(data) {
+            $("#project_name").text(data.name);
+            $("#progress_start_date").text(new Date(data.date_start.date).toDateString());
+            $("#progress_end_date").text(new Date(data.date_end.date).toDateString());
+            document.getElementById("taskLink").href = "{{ path("task") }}?projectId=" + data.id;
+        }
+
+        function executeAjaxGetRole(projectid) {
+            $.get('{{ path('ajax-role') }}', {id: projectid})
+                    .done(function (data) {
+                        $("#user_role").text(data.role);
+                        if (data.owner){
+                            $("#share").removeClass("hide");
+                        }
+                    });
+        }
+
+        function executeAjaxGetTasks(id) {
+            $.get('{{ path('ajax-tasks') }}', {projectId: id})
+                    .done(function (data) {
+                        $('#tasks').html(data);
+                        $( "ul.droptrue" ).sortable({
+                            connectWith: "ul",
+                            dropOnEmpty: true,
+                            update: function (event, ui) {
+                                if(ui.sender){
+                                    executeAjaxSetTask(
+                                            ui.item.attr("id"),
+                                            $(this).parent().attr("id")
+                                    );
+                                }
+                            }
+                        });
+                        $( "#todos, #inprogresses, #dones" ).disableSelection();
+                    })
+        }
+
+        function executeAjaxSetTask(id, parent) {
+            $.get('{{ path('ajax-set-tasks') }}', {taskId: id, state: parent})
+                    .done(function (data) {
+                        console.log(data);
+                    })
+        }
+
+        function executeAjaxGetToken(){
+            var userRole = $('#role').val();
+            $.get('{{ path('share-get-token') }}', {id: selectedId, role: userRole})
+                    .done(function (data) {
+                        $('#share-error').addClass('hide');
+                        var link = "devmanager.dev/app_dev.php/share?token=" + data.token;
+                        $('#token').val(link);
+                    })
+                    .fail(function () {
+                        $('#share-error').removeClass('hide').text("Something went wrong");
+                    });
+        }
+
+        function updateProgressBar(project) {
+            var dateStart = new Date(project.date_start.date);
+            var dateEnd = new Date(project.date_end.date);
+            var currentTime = new Date();
+
+            var total = (dateEnd - dateStart)/(1000 * 60 * 60);
+            var diff = (dateEnd - currentTime)/(1000 * 60 * 60);
+
+            var value = 0;
+            if (dateStart < currentTime && diff > 0){
+                value = (diff * 100) / total;
+                value = 100 - value;
+            }
+
+            if (dateEnd < currentTime){
+                document.getElementById("progress_bar").className = "meter old";
+                document.getElementById("progress").style.width = ("100%");
+                return;
+            }
+
+            document.getElementById("progress").style.width = (value + "%");
+
+            if (value <= 25){
+                document.getElementById("progress_bar").className = "meter green";
+            } else if (value <= 50){
+                document.getElementById("progress_bar").className = "meter yellow";
+            } else if (value <= 75){
+                document.getElementById("progress_bar").className = "meter orange";
+            } else if (value <= 100){
+                document.getElementById("progress_bar").className = "meter red";
+            }
+
+        }
+        
+    </script>
+</body>
+</html>

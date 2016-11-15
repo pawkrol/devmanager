@@ -1,0 +1,12 @@
+{% extends 'bootstrap_3_layout.html.twig' %}
+{% block button_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('btn-primary') ~ ' btn')|trim}) %}
+    {{- parent() -}}
+{%- endblock %}
+
+{% block textarea_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' modal-textarea')|trim}) %}
+    {{- parent() -}}
+{%- endblock textarea_widget %}
