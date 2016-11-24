@@ -11,7 +11,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ProjectUserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ProjectUserRepository")
  * @ORM\Table(name="project_user")
  */
 class ProjectUser
@@ -25,13 +25,13 @@ class ProjectUser
 
     /**
      * @ORM\ManyToOne(targetEntity="Project")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $project;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 

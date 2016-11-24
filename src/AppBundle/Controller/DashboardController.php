@@ -20,8 +20,7 @@ class DashboardController extends Controller
     /**
      * @Route("/dashboard")
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request){
         $this->projectId = $request->query->get("projectId");
         $selectedProject = null;
         if ($this->projectId === null){
@@ -56,8 +55,6 @@ class DashboardController extends Controller
             $currentDate = new DateTime(date("Y-m-d H:i:s"));
 
             $project->setDateCreate($currentDate);
-            $project->setGithubRepo("");
-            $project->setGithubOwner("");
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($project);

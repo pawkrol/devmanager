@@ -26,6 +26,12 @@ ajax-set-tasks:
 ajax-delete-tasks:
     path: /ajax/tasks/delete
 
+ajax-delete-projects:
+    path: /ajax/projects/delete
+
+ajax-get-issues:
+    path: /ajax/issues/get/assigned
+
 share:
     path: /share
 

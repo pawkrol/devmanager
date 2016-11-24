@@ -11,7 +11,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Entity\TaskRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TaskRepository")
  * @ORM\Table(name="tasks")
  */
 class Task

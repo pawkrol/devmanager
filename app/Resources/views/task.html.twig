@@ -38,7 +38,7 @@
     <div class="container-fluid">
         <div class="row toolbar">
             <i class="material-icons toolbar-element toolbar-icon">
-                <a href="{{ path('dashboard') }}?projectId={{ project.id }}">
+                <a href="{{ path('dashboard', {"projectId" : project.id}) }}">
                     chevron_left
                 </a>
             </i>

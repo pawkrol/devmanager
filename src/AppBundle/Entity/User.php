@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @ORM\Table(name="users")
  */
 class User implements UserInterface, \Serializable
@@ -221,4 +221,7 @@ class User implements UserInterface, \Serializable
         return $this->isActive;
     }
 
+    public function __toString() {
+        return $this->username;
+    }
 }

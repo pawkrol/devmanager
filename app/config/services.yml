@@ -4,6 +4,16 @@ parameters:
 #    parameter_name: value
 
 services:
+    app.issue_state_extension:
+        class: AppBundle\Utils\IssueStateTwigExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+    app.issue_priority_extension:
+            class: AppBundle\Utils\IssuePriorityTwigExtension
+            public: false
+            tags:
+                - { name: twig.extension }
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

@@ -1,0 +1,168 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
+</head>
+<style>
+    html, body {
+        color: #444;
+        background-color: #F7F7F7;
+    }
+    a {
+        color: #777;
+    }
+    a:hover {
+        color: #777;
+    }
+    .toolbar{
+        background: #F9F9F9;
+        color: #777;
+        padding: 10px;
+        border-bottom: 1px solid #00d873;
+    }
+    .toolbar-element{
+        vertical-align: middle;
+    }
+    .toolbar-title{
+        font-family: Helvetica, serif;
+        font-size: 21px;
+    }
+    .toolbar-icon{
+        cursor: pointer;
+    }
+    .toolbar-icon > a{
+        color: #777;
+        text-decoration: none;
+    }
+    .toolbar-icon > a:hover{
+        color: #4CAF50;
+    }
+    .issue-top{
+        padding: 0 20px 0 20px;
+        color: #777;
+    }
+    .issue-content{
+        margin: 0 20px 0 20px;
+        padding: 10px;
+        background: #EDEDED;
+        color: #777;
+        border-radius: 10px;
+    }
+    .issue-row{
+        margin: 10px;
+        overflow: auto;
+    }
+    .issue-label{
+        font-weight: bold;
+    }
+    textarea{
+        width: 100%;
+        resize: vertical;
+    }
+    .dropdown{
+        width: 50%;
+    }
+    .issue-button{
+        margin: 0 20px 0 20px;
+        padding: 10px;
+    }
+</style>
+<body>
+
+<div class="container-fluid">
+    {% form_theme issueForm 'form/bootstrap_3_custom.html.twig' %}
+    {{ form_start(issueForm) }}
+    <div class="row toolbar">
+        <i class="material-icons toolbar-element toolbar-icon">
+            <a href="{{ path('dashboard', {"projectId": project.id})}}">
+                chevron_left
+            </a>
+        </i>
+        <span class="toolbar-element toolbar-title">{{ project.name }}</span>
+    </div>
+    <div class="row issue-top">
+        <h3>Issue #{{ issue.id }}</h3>
+    </div>
+    <div class="row issue-content">
+        <div class="row issue-row">Added by <b><i>{{ issuedUser }}</i></b></div>
+        <div class="col-md-2">
+            <div class="row issue-label issue-row">Name:</div>
+            <div class="row issue-label issue-row">Date added:</div>
+            <div class="row issue-label issue-row">Assigned to:</div>
+            <div class="row issue-label issue-row">{{ form_label(issueForm.state) }}:</div>
+            <div class="row issue-label issue-row">{{ form_label(issueForm.priority) }}:</div>
+        </div>
+        <div class="col-md-4">
+            <div class="row issue-row">{{ issue.name }}</div>
+            <div class="row issue-row">{{ issue.dateAdded|date('d M Y') }}</div>
+            <div class="row issue-row">
+                {% if owner %}
+                    <a data-toggle="modal" href="#userModal" >
+                {% endif %}
+                    {% if assignedUser %}
+                            {{ assignedUser }}
+                        {% else %}
+                            none<
+                    {% endif %}
+                {% if owner %}
+                    </a>
+                {% endif %}
+            </div>
+            <div class="row issue-row dropdown">{{ form_widget(issueForm.state) }}</div>
+            <div class="row issue-row dropdown">{{ form_widget(issueForm.priority) }}</div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="row issue-label issue-row">Description:</div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row issue-row">{{ issue.description }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="row issue-label issue-row">{{ form_label(issueForm.comment) }}:</div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row issue-row">{{ form_widget(issueForm.comment) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row issue-button text-right">
+        <button type="submit" class="btn btn-success"><b>Update</b></button>
+    </div>
+    {{ form_end(issueForm) }}
+</div>
+
+{% if owner %}
+<!-- User Modal -->
+<div class="modal fade" id="userModal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addModalLabel">Assign user to issue</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    {% form_theme auForm 'form/bootstrap_3_custom.html.twig' %}
+                    {{ form_start(auForm) }}
+                    {{ form_label(auForm.userId, "User") }}
+                    {{ form_widget(auForm.userId) }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success btn-block" ><b>Assign</b></button>
+                {{ form_end(auForm) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+</body>
+</html>

@@ -52,9 +52,16 @@
                                     add_circle_outline
                             </a>
                         </i>
+                        <i id="issues" class="material-icons dashbar-toolbar-icon">
+                            bug_report
+                        </i>
+                        <div id="dashbar-toolbar-spacer">&nbsp;</div>
                         <i id="share" class="material-icons dashbar-toolbar-icon hide" data-toggle="modal"
                            data-target="#shareModal">
                             person_add
+                        </i>
+                        <i id="delete" class="material-icons dashbar-toolbar-icon hide" onclick="onProjectDelete()">
+                            delete_forever
                         </i>
                     </div>
                     <div class="row progressbar">
@@ -84,6 +91,8 @@
                 </div>
                 <div id="no_project" class="dashbar-info">
                     <h2>no project selected</h2>
+                </div>
+                <div id="assigned_issues" class="col-md-12">
                 </div>
             </div>
         </div>
@@ -156,6 +165,7 @@
         </div>
     </div>
     <script>
+        //The project dashboard should be moved to different TWIG file and pulled by AJAX as a whole
         var selectedId = -1;
 
         $(document).ready(function(){
@@ -199,6 +209,15 @@
 
             executeAjaxGetRole(p);
             executeAjaxGetTasks(p);
+            executeAjaxGetIssues(p);
+        }
+
+        function onProjectDelete(){
+            var r = confirm("Are you sure you want to delete a project?");
+            if (r == true) {
+                $.get('{{ path('ajax-delete-projects') }}', {projectId: selectedId})
+                        .done(location.reload());
+            }
         }
 
         function onTaskDelete(id){
@@ -226,6 +245,7 @@
                         $("#user_role").text(data.role);
                         if (data.owner){
                             $("#share").removeClass("hide");
+                            $("#delete").removeClass("hide");
                         }
                     });
         }
@@ -248,6 +268,13 @@
                         });
                         $( "#todos, #inprogresses, #dones" ).disableSelection();
                     })
+        }
+        
+        function executeAjaxGetIssues(id) {
+            $.get('{{ path('ajax-get-issues') }}', {projectId: id})
+                    .done(function (data) {
+                        $('#assigned_issues').html(data);
+                    });
         }
 
         function executeAjaxSetTask(id, parent) {
@@ -303,7 +330,7 @@
             }
 
         }
-        
+
     </script>
 </body>
 </html>

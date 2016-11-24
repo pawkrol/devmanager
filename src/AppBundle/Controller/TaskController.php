@@ -25,16 +25,12 @@ class TaskController extends Controller
      */
     function getTaskBodyAction(Request $request){
         $projectId = $request->query->get("projectId");
-        $user = $this->getUser();
 
         $em = $this->getDoctrine()->getRepository('AppBundle:Project');
         $project = $em->getProjectById($projectId);
 
         $em = $this->getDoctrine()->getRepository('AppBundle:ProjectUser');
         $users = $em->getProjectUsers($projectId);
-
-//        if (!in_array($user, $users))
-//            return new Response("NOT MEMBER", 400);
 
         $usernameIdPairs = array();
         foreach ($users as $u){
@@ -50,7 +46,7 @@ class TaskController extends Controller
 
     function getTasksAction($projectId){
         $em = $this->getDoctrine()->getRepository('AppBundle:ProjectUser');
-        $member = $em->findOneBy(["user" => $this->getUser()]);
+        $member = $em->findOneBy(["project" => $projectId, "user" => $this->getUser()]);
 
         if ($member === null){
             return new Response("not member", 400);
@@ -83,7 +79,8 @@ class TaskController extends Controller
             }
         }
 
-        return $this->render('tasks.html.twig', array("todos" => $todos,
+        return $this->render('tasks.html.twig', array("owner" => $owner,
+                                                        "todos" => $todos,
                                                         "inprogresses" => $inprogresses,
                                                         "dones" => $dones));
     }

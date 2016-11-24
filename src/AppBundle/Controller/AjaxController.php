@@ -16,10 +16,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Route("/ajax");
+ */
 class AjaxController extends Controller
 {
     /**
-     * @Route("/ajax/role")
+     * @Route("/role")
      */
     public function getRole(Request $request){
         $id = $request->query->get('id');
@@ -34,7 +37,7 @@ class AjaxController extends Controller
     }
 
     /**
-     * @Route("/ajax/tasks")
+     * @Route("/tasks")
      */
     public function getTasks(Request $request){
         $projectId = $request->query->get("projectId");
@@ -48,7 +51,7 @@ class AjaxController extends Controller
     }
 
     /**
-     * @Route("/ajax/tasks/set")
+     * @Route("/tasks/set")
      */
     public function setTasks(Request $request){
         $taskId = $request->query->get("taskId");
@@ -65,14 +68,14 @@ class AjaxController extends Controller
             return new Response("task does not exists", 400);
         }
 
-        $task->setState($this->evaluate($taskState));
+        $task->setState($this->evaluateTaskStatus($taskState));
         $em->flush();
 
         return new Response("ok", 200);
     }
 
     /**
-     * @Route("/ajax/tasks/delete")
+     * @Route("/tasks/delete")
      */
     public function deleteTasks(Request $request){
         $taskId = $request->query->get("taskId");
@@ -94,7 +97,53 @@ class AjaxController extends Controller
         return new Response("ok", 200);
     }
 
-    private function evaluate($string_name){
+    /**
+     * @Route("/projects/delete")
+     */
+    public function deleteProjects(Request $request){
+        $projectId = $request->query->get("projectId");
+
+        if ($projectId === null){
+            return new Response("insufficient data", 400);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $isOwner = $em->getRepository('AppBundle:ProjectUser')->isUserOwner(
+            $this->getUser(), $projectId
+        );
+
+        if ($isOwner === null){
+            return new Response("not owner", 400);
+        }
+
+        $project = $em->getRepository('AppBundle:Project')->findOneBy(["id" => $projectId]);
+
+        $em->remove($project);
+        $em->flush();
+
+        return new Response("ok", 200);
+    }
+
+    /**
+     * @Route("/issues/get/assigned")
+     */
+    public function getAssignedIssues(Request $request){
+        $projectId = $request->query->get("projectId");
+
+        if ($projectId === null){
+            return new Response("insufficient data", 400);
+        }
+
+        $template = $this->forward('AppBundle:Issue:getAssignedIssues', array("projectId" => $projectId))->getContent();
+        $json = json_encode($template);
+
+        $response = new Response($json, 200);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    private function evaluateTaskStatus($string_name){
         if (strcmp("todos", $string_name) === 0){
             return TaskState::STATE_TODO;
         } else if (strcmp("inprogresses", $string_name) === 0){

@@ -155,6 +155,11 @@ html, body {
 .dashbar-toolbar-icon > a:hover{
     color: #4CAF50;
 }
+#dashbar-toolbar-spacer{
+    border-left: 1px solid #CCC;
+    float: right;
+    margin: 5px;
+}
 .task-field{
     background: #3ab75e;
     font-weight: bold;
@@ -179,9 +184,8 @@ html, body {
     cursor: pointer;
 }
 .task-field-description{
-    margin: 0 5px 5px 5px;
-    border-radius: 4px;
-    border: 1px solid #DDD;
+    margin: 1px 5px 5px 5px;
+    font-weight: normal;
 }
 .modal-textarea{
     resize: vertical;
@@ -192,5 +196,26 @@ html, body {
     min-height: 10px;
     float: left;
     padding: 5px;
+}
+
+.issues-header{
+    color: #BBB;
+    padding: 10px 0 5px 0;
+}
+.issues-row{
+    background: #EDEDED;
+    padding: 4px;
+    border-radius: 8px;
+    color: #777;
+}
+.issues-row-info{
+    padding: 4px;
+    color: #BBB;
+}
+.issues-row-name{
+    font-weight: bold;
+}
+.issues-row-id > a{
+    color: #777;
 }
 

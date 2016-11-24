@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <div class="row issues-header">
+        <h4>Assigned issues</h4>
+    </div>
+    <div class="row issues-row-info">
+        <div class="col-md-1">id</div>
+        <div class="col-md-4">name</div>
+        <div class="col-md-5">description</div>
+        <div class="col-md-2">priority</div>
+    </div>
+{% for issue in issues %}
+    <div class="row issues-row">
+        <div class="col-md-1 issues-row-id">
+            <a href="{{ path('issue', {'id': issue.id, "projectId": issue.projectId.id}) }}"> #{{ issue.id }} </a>
+        </div>
+        <div class="col-md-4 issues-row-name">{{ issue.name }}</div>
+        <div class="col-md-5 issues-row-desc">{{ issue.description }}</div>
+        <div class="col-md-2">{{ issue.priority|issuePriority }}</div>
+    </div>
+{% else %}
+    <div class="row" style="color: #777">No assigned issues</div>
+{% endfor %}
+</div>
