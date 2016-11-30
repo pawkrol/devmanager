@@ -19,12 +19,15 @@ class ShareController extends Controller
     {
         $projectId = $request->query->get('id');
         $role = $request->query->get('role');
+        $owner = $request->query->get('owner');
 
         if ($projectId === null || $role === null){
             return new JsonResponse(array('error' => 'wrong data'), $status = 400);
         }
 
-        $token = base64_encode(random_bytes(12));
+        $baseToken = base64_encode(random_bytes(12));
+        $token = $this->clean($baseToken);
+
         $user = $this->getUser();
 
         $projectUserRepository = $this->getDoctrine()->getRepository('AppBundle:ProjectUser');
@@ -40,6 +43,7 @@ class ShareController extends Controller
         $share->setProject($userProject->getProject());
         $share->setRole($role);
         $share->setToken($token);
+        $share->setOwner($owner);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($share);
@@ -73,7 +77,7 @@ class ShareController extends Controller
         $projectUser->setProject($share->getProject());
         $projectUser->setUser($this->getUser());
         $projectUser->setProjectRole($share->getRole());
-        $projectUser->setOwner(false);
+        $projectUser->setOwner($share->getOwner());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($projectUser);
@@ -83,5 +87,11 @@ class ShareController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('dashboard');
+    }
+
+    private function clean($string) {
+        $string = str_replace(' ', '-', $string);
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
     }
 }

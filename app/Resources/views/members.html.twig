@@ -1,0 +1,145 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
+</head>
+<style>
+    html, body {
+        color: #444;
+        background-color: #F7F7F7;
+    }
+    a {
+        color: #777;
+    }
+    a:hover {
+        color: #777;
+    }
+    .toolbar{
+        background: #F9F9F9;
+        color: #777;
+        padding: 10px;
+        border-bottom: 1px solid #00d873;
+    }
+    .toolbar-element{
+        vertical-align: middle;
+    }
+    .toolbar-title{
+        font-family: Helvetica, serif;
+        font-size: 21px;
+    }
+    .toolbar-icon{
+        cursor: pointer;
+    }
+    .issue-top{
+        margin-top: 20px;
+        padding: 0 20px 0 20px;
+        color: #777;
+    }
+    .users-row{
+        background: #EDEDED;
+        padding: 4px;
+        border-radius: 8px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+    .users-row-info{
+        padding: 4px;
+        color: #BBB;
+    }
+    .users-row-name{
+        font-weight: bold;
+    }
+    .users-container{
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 100px;
+        padding: 10px;
+        color: #777;
+    }
+    .users-delete{
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .users-row-id > a{
+        color: #777;
+    }
+    .toolbar-icon > a{
+        color: #777;
+        text-decoration: none;
+    }
+    .toolbar-icon > a:hover{
+        color: #4CAF50;
+    }
+</style>
+<body>
+
+<div class="container-fluid">
+    <div class="row toolbar">
+        <i class="material-icons toolbar-element toolbar-icon">
+            <a href="{{ path('dashboard', {"projectId": project.id})}}">
+                chevron_left
+            </a>
+        </i>
+        <span class="toolbar-element toolbar-title">{{ project.name }}</span>
+    </div>
+    <div class="row users-top text-center">
+        <h4>All <b>{{ project.name }}</b> project members</h4>
+    </div>
+    <div class="row users-container">
+        <div class="col-md-12">
+            <div class="row issues-row-info text-center">
+                <div class="col-md-1">id</div>
+                <div class="col-md-4">username</div>
+                <div class="col-md-5">project role</div>
+                <div class="col-md-1">owner</div>
+                <div class="col-md-1"></div>
+            </div>
+            {% set displayRemove = true %}
+            {% for user in projectUsers %}
+            <div class="row users-row text-center">
+                <div class="col-md-1 users-row-id">
+                    {{ loop.index }}
+                </div>
+                <div class="col-md-4 users-row-name">
+                    {{ user.user.username }}
+                </div>
+                <div class="col-md-5 users-row-desc">
+                    {{ user.projectRole }}
+                </div>
+                <div class="col-md-1 users-row-desc">
+                    {% if user.owner %} <b>yes</b> {% else %} no {% endif %}
+                </div>
+                {% if projectOwner and projectUsers|length > 1 %}
+                <div class="col-md-1 users-row-desc">
+                    <span class="users-delete" onclick="deleteUser({{ user.user.id }}, '{{ user.user.username }}')">
+                        &times;
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% if projectOwner and projectUsers|length %}
+<script>
+    function deleteUser(userId, username) {
+        var r = confirm("Are you sure you want to remove a " + username + " from the project?\n" +
+                "All user assigned tasks will also be deleted");
+        if (r == true) {
+            $.get('{{ path('remove-member') }}', {userId: userId, projectId: {{ project.id }} })
+                    .done(function () {
+                        location.reload()
+                    })
+                    .fail(function () {
+                        alert("Cannot delete! Probably last owner");
+                    });
+        }
+    }
+</script>
+{% endif %}
+</body>
+</html>

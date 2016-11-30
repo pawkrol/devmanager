@@ -72,8 +72,8 @@
 <body>
 
 <div class="container-fluid">
-    {% form_theme issueForm 'form/bootstrap_3_custom.html.twig' %}
-    {{ form_start(issueForm) }}
+    {% form_theme form 'form/bootstrap_3_custom.html.twig' %}
+    {{ form_start(form) }}
     <div class="row toolbar">
         <i class="material-icons toolbar-element toolbar-icon">
             <a href="{{ path('dashboard', {"projectId": project.id})}}">
@@ -81,6 +81,11 @@
             </a>
         </i>
         <span class="toolbar-element toolbar-title">{{ project.name }}</span>
+        <i class="material-icons toolbar-element toolbar-icon" style="float: right">
+            <a href="{{ path('issues_page', {"projectId": project.id})}}">
+                bug_report
+            </a>
+        </i>
     </div>
     <div class="row issue-top">
         <h3>Issue #{{ issue.id }}</h3>
@@ -90,28 +95,23 @@
         <div class="col-md-2">
             <div class="row issue-label issue-row">Name:</div>
             <div class="row issue-label issue-row">Date added:</div>
-            <div class="row issue-label issue-row">Assigned to:</div>
-            <div class="row issue-label issue-row">{{ form_label(issueForm.state) }}:</div>
-            <div class="row issue-label issue-row">{{ form_label(issueForm.priority) }}:</div>
+            <div class="row issue-label issue-row">{{ form_label(form.assignedUserId, "Assigned user") }}:</div>
+            <div class="row issue-label issue-row">{{ form_label(form.state) }}:</div>
+            <div class="row issue-label issue-row">{{ form_label(form.priority) }}:</div>
         </div>
         <div class="col-md-4">
             <div class="row issue-row">{{ issue.name }}</div>
             <div class="row issue-row">{{ issue.dateAdded|date('d M Y') }}</div>
-            <div class="row issue-row">
-                {% if owner %}
-                    <a data-toggle="modal" href="#userModal" >
-                {% endif %}
-                    {% if assignedUser %}
-                            {{ assignedUser }}
-                        {% else %}
-                            none<
-                    {% endif %}
-                {% if owner %}
-                    </a>
-                {% endif %}
+            {% if owner %}
+                <div class="row issue-row dropdown">
+                {{ form_widget(form.assignedUserId) }}
+            {% else %}
+                <div class="row issue-row">
+                {{ assignedUser }}
+            {% endif %}
             </div>
-            <div class="row issue-row dropdown">{{ form_widget(issueForm.state) }}</div>
-            <div class="row issue-row dropdown">{{ form_widget(issueForm.priority) }}</div>
+            <div class="row issue-row dropdown">{{ form_widget(form.state) }}</div>
+            <div class="row issue-row dropdown">{{ form_widget(form.priority) }}</div>
         </div>
         <div class="col-md-6">
             <div class="row">
@@ -124,10 +124,10 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <div class="row issue-label issue-row">{{ form_label(issueForm.comment) }}:</div>
+                    <div class="row issue-label issue-row">{{ form_label(form.comment) }}:</div>
                 </div>
                 <div class="col-md-9">
-                    <div class="row issue-row">{{ form_widget(issueForm.comment) }}</div>
+                    <div class="row issue-row">{{ form_widget(form.comment) }}</div>
                 </div>
             </div>
         </div>
@@ -135,34 +135,8 @@
     <div class="row issue-button text-right">
         <button type="submit" class="btn btn-success"><b>Update</b></button>
     </div>
-    {{ form_end(issueForm) }}
+        {{ form_widget(form._token) }}
+    {#{{ form_end(form) }}#}
 </div>
-
-{% if owner %}
-<!-- User Modal -->
-<div class="modal fade" id="userModal" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="addModalLabel">Assign user to issue</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    {% form_theme auForm 'form/bootstrap_3_custom.html.twig' %}
-                    {{ form_start(auForm) }}
-                    {{ form_label(auForm.userId, "User") }}
-                    {{ form_widget(auForm.userId) }}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success btn-block" ><b>Assign</b></button>
-                {{ form_end(auForm) }}
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
 </body>
 </html>

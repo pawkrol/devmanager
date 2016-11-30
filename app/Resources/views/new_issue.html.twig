@@ -25,32 +25,35 @@
     .toolbar-icon{
         cursor: pointer;
     }
-    .toolbar-icon > a{
-        color: #777;
-        text-decoration: none;
-    }
-    .toolbar-icon > a:hover{
-        color: #4CAF50;
-    }
-    .task-top{
+    .issue-top{
         margin-top: 20px;
         padding: 0 20px 0 20px;
         color: #777;
     }
+    textarea{
+        resize: vertical;
+    }
+    a{
+        color: #777;
+        text-decoration: none;
+    }
+    a:hover{
+        color: #4CAF50;
+        text-decoration: none;
+    }
 </style>
 <body>
-
     <div class="container-fluid">
         <div class="row toolbar">
-            <i class="material-icons toolbar-element toolbar-icon">
-                <a href="{{ path('dashboard', {"projectId" : project.id}) }}">
-                    chevron_left
-                </a>
-            </i>
-            <span class="toolbar-element toolbar-title">{{ project.name }}</span>
+            <a href="{{ path('issues_page', {"projectId" : project.id}) }}">
+                <i class="material-icons toolbar-element toolbar-icon">
+                        chevron_left
+                </i>
+                <span class="toolbar-element toolbar-title">back</span>
+            </a>
         </div>
-        <div class="row task-top text-center">
-            <h4>New <b>{{ project.name }}</b> task</h4>
+        <div class="row issue-top text-center">
+            <h4>New <b>{{ project.name }}</b> issue</h4>
         </div>
         <div class="row">
             <div class="col-md-4">
@@ -58,11 +61,22 @@
             <div class="col-md-4">
                 {% form_theme form 'form/bootstrap_3_custom.html.twig' %}
                 {{ form_start(form) }}
-                {{ form_row(form.name) }}
-                {{ form_row(form.description) }}
-                {{ form_label(form.userId, "User") }}
-                {{ form_errors(form.userId) }}
-                {{ form_widget(form.userId) }}
+                <div class="form-group">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+                </div>
+                <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                </div>
+                <div class="form-group">
+                {{ form_label(form.assignedUserId, "Assigned user") }}
+                {{ form_widget(form.assignedUserId) }}
+                </div>
+                <div class="form-group">
+                {{ form_label(form.priority) }}
+                {{ form_widget(form.priority) }}
+                </div>
                 <button type="submit" class="btn btn-success btn-block" style="margin-top: 20px"><b>Add</b></button>
                 {{ form_end(form) }}
             </div>

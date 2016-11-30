@@ -49,11 +49,18 @@
                         <i class="material-icons dashbar-toolbar-icon" data-toggle="modal"
                            data-target="#taskModal">
                             <a id="taskLink">
-                                    add_circle_outline
+                                add_circle_outline
                             </a>
                         </i>
                         <i id="issues" class="material-icons dashbar-toolbar-icon">
-                            bug_report
+                            <a id="issuesLink">
+                                bug_report
+                            </a>
+                        </i>
+                        <i class="material-icons dashbar-toolbar-icon">
+                            <a id="usersLink">
+                                people
+                            </a>
                         </i>
                         <div id="dashbar-toolbar-spacer">&nbsp;</div>
                         <i id="share" class="material-icons dashbar-toolbar-icon hide" data-toggle="modal"
@@ -143,7 +150,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            onclick="clearShareToken()">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="addModalLabel">Share project</h4>
                 </div>
@@ -153,6 +161,9 @@
                     <div class="form-group">
                         <label for="role">User role</label>
                         <input type="text" class="form-control" id="role" placeholder="ex. Project developer">
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="share_owner"> Set as owner<br>
                     </div>
                     <button class="btn btn-success btn-block" onclick="executeAjaxGetToken()">
                         Generate share link
@@ -216,7 +227,10 @@
             var r = confirm("Are you sure you want to delete a project?");
             if (r == true) {
                 $.get('{{ path('ajax-delete-projects') }}', {projectId: selectedId})
-                        .done(location.reload());
+                        .done(function () {
+                            console.log(selectedId);
+                            location.reload()
+                        });
             }
         }
 
@@ -237,6 +251,8 @@
             $("#progress_start_date").text(new Date(data.date_start.date).toDateString());
             $("#progress_end_date").text(new Date(data.date_end.date).toDateString());
             document.getElementById("taskLink").href = "{{ path("task") }}?projectId=" + data.id;
+            document.getElementById("issuesLink").href = "{{ path("issues_page") }}?projectId=" + data.id;
+            document.getElementById("usersLink").href = "{{ path("members_page") }}?projectId=" + data.id;
         }
 
         function executeAjaxGetRole(projectid) {
@@ -246,6 +262,9 @@
                         if (data.owner){
                             $("#share").removeClass("hide");
                             $("#delete").removeClass("hide");
+                        } else {
+                            $("#share").addClass("hide");
+                            $("#delete").addClass("hide");
                         }
                     });
         }
@@ -286,7 +305,8 @@
 
         function executeAjaxGetToken(){
             var userRole = $('#role').val();
-            $.get('{{ path('share-get-token') }}', {id: selectedId, role: userRole})
+            var userOwner = document.getElementById("share_owner").checked ? 1 : 0;
+            $.get('{{ path('share-get-token') }}', {id: selectedId, role: userRole, owner: userOwner})
                     .done(function (data) {
                         $('#share-error').addClass('hide');
                         var link = "devmanager.dev/app_dev.php/share?token=" + data.token;
@@ -295,6 +315,10 @@
                     .fail(function () {
                         $('#share-error').removeClass('hide').text("Something went wrong");
                     });
+        }
+
+        function clearShareToken() {
+            $('#token').val(null);
         }
 
         function updateProgressBar(project) {

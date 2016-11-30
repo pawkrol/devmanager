@@ -34,6 +34,11 @@ class Share
     private $role;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $owner;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Project")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      */
@@ -119,5 +124,29 @@ class Share
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * Set owner
+     *
+     * @param boolean $owner
+     *
+     * @return Share
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get owner
+     *
+     * @return boolean
+     */
+    public function getOwner()
+    {
+        return $this->owner;
     }
 }

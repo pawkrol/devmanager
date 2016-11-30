@@ -1,0 +1,174 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
+</head>
+<style>
+    html, body {
+        color: #444;
+        background-color: #F7F7F7;
+    }
+    a {
+        color: #777;
+    }
+    a:hover {
+        color: #777;
+    }
+    .toolbar{
+        background: #F9F9F9;
+        color: #777;
+        padding: 10px;
+        border-bottom: 1px solid #00d873;
+    }
+    .toolbar-element{
+        vertical-align: middle;
+    }
+    .toolbar-title{
+        font-family: Helvetica, serif;
+        font-size: 21px;
+    }
+    .toolbar-icon{
+        cursor: pointer;
+    }
+    .issue-top{
+        margin-top: 20px;
+        padding: 0 20px 0 20px;
+        color: #777;
+    }
+    .issues-row{
+        background: #EDEDED;
+        padding: 4px;
+        border-radius: 8px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+    .issues-row-info{
+        padding: 4px;
+        color: #BBB;
+    }
+    .issues-row-name{
+        font-weight: bold;
+    }
+    .issues-container{
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 100px;
+        padding: 10px;
+        color: #777;
+    }
+    .issues-row-id > a{
+        color: #777;
+    }
+    .toolbar-icon > a{
+        color: #777;
+        text-decoration: none;
+    }
+    .toolbar-icon > a:hover{
+        color: #4CAF50;
+    }
+    .issue-open{
+        color: #C82829;
+    }
+    .issue-working{
+        color: #4CAF50;
+    }
+    .issue-legend{
+        padding: 2px;
+        /*opacity: 0.7;*/
+    }
+</style>
+<body>
+
+<div class="container-fluid">
+    <div class="row toolbar">
+        <i class="material-icons toolbar-element toolbar-icon">
+            <a href="{{ path('dashboard', {"projectId": project.id})}}">
+                chevron_left
+            </a>
+        </i>
+        <span class="toolbar-element toolbar-title">{{ project.name }}</span>
+        <i class="material-icons toolbar-element toolbar-icon" style="float: right">
+            <a href="{{ path('new_issue', {"projectId": project.id})}}">
+                add_box
+            </a>
+        </i>
+    </div>
+    <div class="row issue-top text-center">
+        <h4>All <b>{{ project.name }}</b> issues</h4>
+    </div>
+    <div class="row issues-container">
+        <div class="col-md-12">
+            <div class="row issues-row-info text-center">
+                <div class="col-md-1">status</div>
+                <div class="col-md-1">id</div>
+                <div class="col-md-4">name</div>
+                <div class="col-md-5">description</div>
+                <div class="col-md-1">priority</div>
+            </div>
+            {% for issue in issues %}
+                <div class="row issues-row text-center">
+                    <div class="col-md-1 issues-row-id">
+                        {% if issue.state == 0 %}
+                                <i class="material-icons issue-open">announcement</i>
+                            {% elseif issue.state == 1 %}
+                                <i class="material-icons issue-open">visibility</i>
+                            {% elseif issue.state == 2 %}
+                                <i class="material-icons issue-open">assignment_turned_in</i>
+                            {% elseif issue.state == 3 %}
+                                <i class="material-icons issue-working">assignment_ind</i>
+                            {% elseif issue.state == 4 %}
+                                <i class="material-icons">done</i>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-1 issues-row-id">
+                        <a href="{{ path('issue', {'id': issue.id, "projectId": issue.projectId.id}) }}"> #{{ issue.id }} </a>
+                    </div>
+                    <div class="col-md-4 issues-row-name">{{ issue.name }}</div>
+                    <div class="col-md-5 issues-row-desc">{{ issue.description }}</div>
+                    <div class="col-md-1">{{ issue.priority|issuePriority }}</div>
+                </div>
+            {% else %}
+                <div class="row text-center" style="color: #777">No issues</div>
+            {% endfor %}
+        </div>
+        <div class="row" style="min-height: 100px"></div>
+        <div class="row issue-legend text-center">
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                <i class="material-icons issue-open">announcement</i>
+            </div>
+            <div class="col-md-2">
+                <i class="material-icons issue-open">visibility</i>
+            </div>
+            <div class="col-md-2">
+                <i class="material-icons issue-open">assignment_turned_in</i>
+            </div>
+            <div class="col-md-2">
+                <i class="material-icons issue-working">assignment_ind</i>
+            </div>
+            <div class="col-md-2">
+                <i class="material-icons">done</i>
+            </div>
+        </div>
+        <div class="row issue-legend text-center">
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+               new issue
+            </div>
+            <div class="col-md-2">
+               issue acknowledged
+            </div>
+            <div class="col-md-2">
+               issue confirmed
+            </div>
+            <div class="col-md-2">
+               issue assigned
+            </div>
+            <div class="col-md-2">
+                issue closed
+            </div>
+        </div>
+    </div>
+</div>
